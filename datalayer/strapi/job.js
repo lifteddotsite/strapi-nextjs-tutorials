@@ -14,10 +14,28 @@ export const getJobsSlugs = async () => {
   );
   const res = await axios.get(`${apiUrl}/jobs?${query}`);
   const rawSlugs = res.data.data;
-//   return rawSlugs;
+  //   return rawSlugs;
 
   const slugs = rawSlugs.map((rawSlug) => {
     return rawSlug.attributes.slug;
   });
   return slugs;
+};
+
+export const getJobBySlug = async ({ slug }) => {
+  const query = qs.stringify(
+    {
+      filters: {
+        slug: {
+          $eq: slug,
+        },
+      },
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const res = await axios.get(`${apiUrl}/jobs?${query}`);
+  const rawJob = res.data.data[0];
+  return rawJob;
 };
