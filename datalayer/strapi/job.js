@@ -30,6 +30,16 @@ export const getJobBySlug = async ({ slug }) => {
           $eq: slug,
         },
       },
+      populate: [
+        'company',
+        'company.logo',
+        'company.coverImage',
+        'relatedJobs',
+        'relatedJobs.company',
+        'relatedJobs.company.logo',
+        'relatedJobs.company.coverImage',
+        'skillsTags',
+      ],
     },
     {
       encodeValuesOnly: true,
