@@ -100,6 +100,12 @@ export const searchJobs = async (query) => {
   if (query.featuredJobsOnly)
     strapiQuery['filters']['featuredJob'] = { $eq: true };
 
+  // Add Range Query Filters
+  strapiQuery['filters']['baseAnnualSalary'] = {
+    $gte: query.minBaseSalary,
+    $lte: query.maxBaseSalary,
+  };
+
   const strapiQueryStr = qs.stringify(strapiQuery, { encodeValuesOnly: true });
   const res = await axios.get(`${apiUrl}/jobs?${strapiQueryStr}`);
   const rawJobs = res.data.data;
