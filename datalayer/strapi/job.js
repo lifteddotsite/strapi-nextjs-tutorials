@@ -106,6 +106,10 @@ export const searchJobs = async (query) => {
     $lte: query.maxBaseSalary,
   };
 
+  // Add Inclusion Query Filters
+  strapiQuery['filters']['jobType'] = { $in: query.jobTypes };
+  strapiQuery['filters']['experienceLevel'] = { $in: query.experienceLevels };
+
   const strapiQueryStr = qs.stringify(strapiQuery, { encodeValuesOnly: true });
   const res = await axios.get(`${apiUrl}/jobs?${strapiQueryStr}`);
   const rawJobs = res.data.data;
