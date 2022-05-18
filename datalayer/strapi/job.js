@@ -70,3 +70,21 @@ export const getJobsByCompanyId = async ({ id }) => {
   const rawJobs = res.data.data;
   return rawJobs;
 };
+
+export const getJobs = async ({ start = 0, limit = 100 } = {}) => {
+  const query = qs.stringify(
+    {
+      populate: ['company', 'company.logo', 'company.coverImage', 'skillsTags'],
+      pagination: {
+        start,
+        limit,
+      },
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const res = await axios.get(`${apiUrl}/jobs?${query}`);
+  const rawJobs = res.data.data;
+  return rawJobs;
+};
