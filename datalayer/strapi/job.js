@@ -88,3 +88,21 @@ export const getJobs = async ({ page = 1, pageSize = 100 } = {}) => {
   const rawJobs = res.data.data;
   return rawJobs;
 };
+
+export const searchJobs = async (query) => {
+  const strapiQuery = {
+    populate: ['company', 'company.logo', 'company.coverImage', 'skillsTags'],
+    filters: {},
+  };
+
+  // Add Boolean Query Filters
+  if (query.remoteOkOnly) strapiQuery['filters']['remoteOk'] = { $eq: true };
+  if (query.featuredJobsOnly)
+    strapiQuery['filters']['featuredJob'] = { $eq: true };
+
+  const strapiQueryStr = qs.stringify(strapiQuery, { encodeValuesOnly: true });
+  const res = await axios.get(`${apiUrl}/jobs?${strapiQueryStr}`);
+  const rawJobs = res.data.data;
+
+  return rawJobs;
+};
