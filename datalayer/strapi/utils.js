@@ -1,6 +1,16 @@
 import date from 'date-and-time';
+import { marked } from 'marked';
 
 const assetsBaseUrl = process.env.STRAPI_API_BASE_URL.replace('/api', '');
+
+export const richTextReducer = (rawRichtext) => {
+  const parsedRichText = marked.parse(rawRichtext);
+  let styledRichText = parsedRichText.replace(
+    '<ul>',
+    "<ul style='list-style-type: circle;'>"
+  );
+  return styledRichText;
+};
 
 export const imageReducer = (imageField) => {
   const fields = imageField.data.attributes;
@@ -43,6 +53,10 @@ export const jobReducer = (rawJob, parseRelatedJobs = true) => {
   job.datePosted = dateReducer(job.datePosted);
   job.company = companyReducer(job.company.data);
   job.skills = skillsReducer(job.skillsTags);
+  job.aboutYou = richTextReducer(job.aboutYou);
+  job.remunerationPackage = richTextReducer(job.remunerationPackage);
+  job.jobResponsibilities = richTextReducer(job.jobResponsibilities);
+  job.jobDescription = richTextReducer(job.jobDescription);
 
   const relatedJobs = job.relatedJobs || [];
 
