@@ -110,6 +110,12 @@ export const searchJobs = async (query) => {
   strapiQuery['filters']['jobType'] = { $in: query.jobTypes };
   strapiQuery['filters']['experienceLevel'] = { $in: query.experienceLevels };
 
+  //Add Nested Inclusion Query Filters
+  if (query.selectedTags.length)
+    strapiQuery['filters']['skillsTags'] = {
+      name: { $in: query.selectedTags },
+    };
+
   const strapiQueryStr = qs.stringify(strapiQuery, { encodeValuesOnly: true });
   const res = await axios.get(`${apiUrl}/jobs?${strapiQueryStr}`);
   const rawJobs = res.data.data;
