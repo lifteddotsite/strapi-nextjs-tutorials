@@ -35,6 +35,7 @@ export const getCompanyBySlug = async ({ slug }) => {
           $eq: slug,
         },
       },
+      populate: ['logo', 'coverImage'],
     },
     {
       encodeValuesOnly: true,
