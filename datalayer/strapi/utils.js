@@ -35,3 +35,24 @@ export const skillsReducer = (tagsField) => {
   });
   return tags;
 };
+
+export const jobReducer = (rawJob, parseRelatedJobs = true) => {
+  let job = { ...rawJob.attributes };
+  job.id = rawJob.id;
+
+  job.datePosted = dateReducer(job.datePosted);
+  job.company = companyReducer(job.company.data);
+  job.skills = skillsReducer(job.skillsTags);
+
+  const relatedJobs = job.relatedJobs || [];
+
+  if (!parseRelatedJobs) {
+    job.relatedJobs = [];
+  } else {
+    job.relatedJobs = relatedJobs.data.map((relatedJob) => {
+      return jobReducer(relatedJob, false);
+    });
+  }
+
+  return job;
+};

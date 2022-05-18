@@ -1,5 +1,6 @@
 import axios from './client';
 import qs from 'qs';
+import { jobReducer } from './utils';
 
 const apiUrl = process.env.STRAPI_API_BASE_URL;
 
@@ -47,7 +48,7 @@ export const getJobBySlug = async ({ slug }) => {
   );
   const res = await axios.get(`${apiUrl}/jobs?${query}`);
   const rawJob = res.data.data[0];
-  return rawJob;
+  return jobReducer(rawJob);
 };
 
 export const getJobsByCompanyId = async ({ id }) => {
@@ -68,7 +69,8 @@ export const getJobsByCompanyId = async ({ id }) => {
   );
   const res = await axios.get(`${apiUrl}/jobs?${query}`);
   const rawJobs = res.data.data;
-  return rawJobs;
+  const jobs = rawJobs.map((rawJob) => jobReducer(rawJob, false));
+  return jobs;
 };
 
 export const getJobs = async ({ page = 1, pageSize = 100 } = {}) => {
@@ -86,7 +88,9 @@ export const getJobs = async ({ page = 1, pageSize = 100 } = {}) => {
   );
   const res = await axios.get(`${apiUrl}/jobs?${query}`);
   const rawJobs = res.data.data;
-  return rawJobs;
+
+  const jobs = rawJobs.map((rawJob) => jobReducer(rawJob, false));
+  return jobs;
 };
 
 export const searchJobs = async (query) => {
@@ -150,7 +154,8 @@ export const searchJobs = async (query) => {
   const res = await axios.get(`${apiUrl}/jobs?${strapiQueryStr}`);
   const rawJobs = res.data.data;
 
-  return rawJobs;
+  const jobs = rawJobs.map((rawJob) => jobReducer(rawJob, false));
+  return jobs;
 };
 
 export async function getJobsSkills() {
