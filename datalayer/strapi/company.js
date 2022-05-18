@@ -1,7 +1,6 @@
 import axios from './client';
 import qs from 'qs';
 
-
 const apiUrl = process.env.STRAPI_API_BASE_URL;
 
 export const getCompanies = async () => {
@@ -9,7 +8,6 @@ export const getCompanies = async () => {
   const rawCompanies = res.data.data;
   return rawCompanies;
 };
-
 
 export const getCompaniesSlugs = async () => {
   const query = qs.stringify(
@@ -27,4 +25,22 @@ export const getCompaniesSlugs = async () => {
     return rawSlug.attributes.slug;
   });
   return slugs;
+};
+
+export const getCompanyBySlug = async ({ slug }) => {
+  const query = qs.stringify(
+    {
+      filters: {
+        slug: {
+          $eq: slug,
+        },
+      },
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const res = await axios.get(`${apiUrl}/companies?${query}`);
+  const rawCompany = res.data.data[0];
+  return rawCompany;
 };
