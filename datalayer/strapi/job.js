@@ -152,3 +152,26 @@ export const searchJobs = async (query) => {
 
   return rawJobs;
 };
+
+export async function getJobsSkills() {
+  const query = qs.stringify(
+    {
+      fields: ['name'],
+      filters: {
+        tagType: {
+          $eq: 'skill',
+        },
+      },
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const res = await axios.get(`${apiUrl}/tags?${query}`);
+  const rawTags = res.data.data;
+
+  const tags = rawTags.map((rawTag) => {
+    return rawTag.attributes.name;
+  });
+  return tags;
+}
