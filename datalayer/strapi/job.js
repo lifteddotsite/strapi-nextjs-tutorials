@@ -111,10 +111,40 @@ export const searchJobs = async (query) => {
   strapiQuery['filters']['experienceLevel'] = { $in: query.experienceLevels };
 
   //Add Nested Inclusion Query Filters
-  if (query.selectedTags.length)
+  if (query.selectedTags && query.selectedTags.length)
     strapiQuery['filters']['skillsTags'] = {
       name: { $in: query.selectedTags },
     };
+
+  // Add Full Text Search Query
+  if (query.searchBarText) {
+    const searchFields = [
+      'title',
+      'jobCategory',
+      'jobType',
+      'jobDescription',
+      'aboutYou',
+      'jobResponsibilities',
+      'remunerationPackage',
+      // deep nested search fields
+      'skillsTags.name',
+      'company.name',
+      'company.city',
+    ];
+
+    strapiQuery['filters']['$or'] = searchFields.map((field) => {
+      const searchField = {};
+      if (!field.includes('.')) {
+        searchField[field] = { $containsi: query.searchBarText };
+      } else {
+        const [level1, level2] = field.split('.');
+        const nestedSearchField = {};
+        nestedSearchField[level2] = { $containsi: query.searchBarText };
+        searchField[level1] = nestedSearchField;
+      }
+      return searchField;
+    });
+  }
 
   const strapiQueryStr = qs.stringify(strapiQuery, { encodeValuesOnly: true });
   const res = await axios.get(`${apiUrl}/jobs?${strapiQueryStr}`);
