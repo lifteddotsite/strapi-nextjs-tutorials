@@ -6,7 +6,15 @@ import { companyReducer } from './utils';
 const apiUrl = process.env.STRAPI_API_BASE_URL;
 
 export const getCompanies = async () => {
-  const res = await axios.get(`${apiUrl}/companies`);
+  const query = qs.stringify(
+    {
+      populate: ['logo', 'coverImage'],
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const res = await axios.get(`${apiUrl}/companies?${query}`);
   const rawCompanies = res.data.data;
   const companies = rawCompanies.map((company) => companyReducer(company));
   return companies;
