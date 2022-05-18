@@ -10,3 +10,11 @@ export const imageReducer = (imageField) => {
     contentType: fields.mime,
   };
 };
+
+export const companyReducer = (rawCompany) => {
+  let company = { ...rawCompany.attributes };
+  company.id = rawCompany.id;
+  company.logo = imageReducer(company.logo);
+  company.coverImage = imageReducer(company.coverImage);
+  return company;
+};
