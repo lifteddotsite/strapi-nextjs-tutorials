@@ -49,3 +49,24 @@ export const getJobBySlug = async ({ slug }) => {
   const rawJob = res.data.data[0];
   return rawJob;
 };
+
+export const getJobsByCompanyId = async ({ id }) => {
+  const query = qs.stringify(
+    {
+      filters: {
+        company: {
+          id: {
+            $eq: id,
+          },
+        },
+      },
+      populate: ['company', 'company.logo', 'company.coverImage', 'skillsTags'],
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+  const res = await axios.get(`${apiUrl}/jobs?${query}`);
+  const rawJobs = res.data.data;
+  return rawJobs;
+};
