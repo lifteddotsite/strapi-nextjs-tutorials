@@ -71,13 +71,13 @@ export const getJobsByCompanyId = async ({ id }) => {
   return rawJobs;
 };
 
-export const getJobs = async ({ start = 0, limit = 100 } = {}) => {
+export const getJobs = async ({ page = 1, pageSize = 100 } = {}) => {
   const query = qs.stringify(
     {
       populate: ['company', 'company.logo', 'company.coverImage', 'skillsTags'],
       pagination: {
-        start,
-        limit,
+        page,
+        pageSize,
       },
     },
     {
