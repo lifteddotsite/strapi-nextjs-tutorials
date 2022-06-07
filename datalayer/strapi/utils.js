@@ -1,7 +1,7 @@
 import date from 'date-and-time';
 import { marked } from 'marked';
 
-const assetsBaseUrl = process.env.STRAPI_API_BASE_URL.replace('/api', '');
+const assetsBaseUrl = process.env.STRAPI_ASSETS_BASE_URL;
 
 export const richTextReducer = (rawRichtext) => {
   const parsedRichText = marked.parse(rawRichtext);
